@@ -469,7 +469,7 @@ a {
   position: absolute;
   z-index: 15;
   right: var(--page-gutter);
-  bottom: 10vh;
+  bottom: 0;
   width: min(34rem, 39vw);
   color: var(--color-black);
 }

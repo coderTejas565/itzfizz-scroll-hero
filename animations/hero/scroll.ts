@@ -91,26 +91,42 @@ export function createHeroScrollAnimation(root: HTMLElement) {
     isMobile ? mobile : desktop;
 
   const context = gsap.context(() => {
-    // Intro: elements enter naturally when the page loads.
+    // Establish the initial intro state before animating.
+    // Only animate elements that exist in the current markup.
+    const introElements = [eyebrow, title, statement, visual].filter(
+      (element): element is HTMLElement => Boolean(element),
+    );
+
+    gsap.set(introElements, {
+      autoAlpha: 0,
+      y: 20,
+    });
+
+    gsap.set(visual, {
+      scale: 0.9,
+      transformOrigin: "50% 50%",
+      force3D: true,
+    });
+
     const intro = gsap.timeline({
       defaults: { ease: "power3.out" },
     });
 
     if (eyebrow) {
-      intro.from(eyebrow, {
-        autoAlpha: 0,
-        y: 18,
-        duration: 0.65,
+      intro.to(eyebrow, {
+        autoAlpha: 1,
+        y: 0,
+        duration: 0.6,
       });
     }
 
     if (title) {
-      intro.from(
+      intro.to(
         title,
         {
-          autoAlpha: 0,
-          y: 35,
-          duration: 0.9,
+          autoAlpha: 1,
+          y: 0,
+          duration: 0.85,
           ease: "power4.out",
         },
         "-=0.3",
@@ -118,34 +134,28 @@ export function createHeroScrollAnimation(root: HTMLElement) {
     }
 
     if (statement) {
-      intro.from(
+      intro.to(
         statement,
         {
-          autoAlpha: 0,
-          y: 18,
-          duration: 0.65,
+          autoAlpha: 1,
+          y: 0,
+          duration: 0.6,
         },
-        "-=0.45",
+        "-=0.4",
       );
     }
 
-    intro.from(
+    intro.to(
       visual,
       {
-        autoAlpha: 0,
-        scale: 0.9,
-        y: 22,
-        duration: 1.05,
+        autoAlpha: 1,
+        scale: 1,
+        y: 0,
+        duration: 0.95,
         ease: "power4.out",
       },
-      "-=0.65",
+      "-=0.45",
     );
-
-    // Set the artwork's transform origin.
-    gsap.set(visual, {
-      transformOrigin: "50% 50%",
-      force3D: true,
-    });
 
     [backPanel, frontPanel, orangeForm, details].forEach((layer) => {
       if (layer) {
@@ -156,7 +166,7 @@ export function createHeroScrollAnimation(root: HTMLElement) {
       }
     });
 
-    // Metrics start with the first item visible.
+    // Keep metrics ready for scroll-driven transitions.
     gsap.set(metricItems, {
       autoAlpha: 0,
       y: 24,
@@ -393,7 +403,7 @@ export function createHeroScrollAnimation(root: HTMLElement) {
       3.4,
     );
 
-    // Metric transitions.
+    // Transition metrics as the user scrolls.
     const metricStart = isMobile ? 2.35 : 2.15;
     const metricSpan = 1.65;
     const interval =
@@ -430,6 +440,7 @@ export function createHeroScrollAnimation(root: HTMLElement) {
           scale: 1,
           duration: 0.38,
           ease: "power3.out",
+          immediateRender: false,
         },
         position + 0.08,
       );
@@ -458,7 +469,7 @@ export function createHeroScrollAnimation(root: HTMLElement) {
       );
     }
 
-    // Recalculate positions after the initial layout.
+    // Refresh after the initial layout and intro setup.
     const refreshFrame = requestAnimationFrame(() => {
       ScrollTrigger.refresh();
 
@@ -468,7 +479,6 @@ export function createHeroScrollAnimation(root: HTMLElement) {
       });
     });
 
-    // Cancel pending refresh if this context is reverted.
     return () => cancelAnimationFrame(refreshFrame);
   }, root);
 
