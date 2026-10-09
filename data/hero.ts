@@ -1,24 +1,30 @@
-export const heroStats = [
-  {
-    index: "01",
-    value: "58%",
-    description: "Faster digital experiences",
-  },
-  {
-    index: "02",
-    value: "27%",
-    description: "Higher user engagement",
-  },
-  {
-    index: "03",
-    value: "42%",
-    description: "More efficient workflows",
-  },
-  {
-    index: "04",
-    value: "91%",
-    description: "Projects delivered with impact",
-  },
-] as const;
+export type HeroMetricData = {
+  value: string;
+  label: string;
+  description: string;
+};
 
-export const heroHeadline = "WELCOME ITZFIZZ";
+export const heroMetrics: HeroMetricData[] = [
+  {
+    value: "320+",
+    label: "Digital experiences",
+    description: "Built across products, platforms and ambitious ideas.",
+  },
+  {
+    value: "94%",
+    label: "Client retention",
+    description:
+      "Long-term partnerships built through consistent digital impact.",
+  },
+  {
+    value: "12M+",
+    label: "Users reached",
+    description: "Digital experiences connecting brands with people at scale.",
+  },
+  {
+    value: "08",
+    label: "Years of experience",
+    description:
+      "Years spent turning complex ideas into useful digital products.",
+  },
+];
