@@ -1,36 +1,131 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Itzfizz Digital — Scroll-Driven Hero
+
+A cinematic, scroll-driven hero experience built for the Itzfizz Digital internship assignment. The design combines warm editorial styling, bold typography, layered geometric artwork, and GSAP-powered scroll interactions.
+
+## Overview
+
+**Concept:** Structural Reveal — the work assembles itself as you arrive.
+
+The hero introduces the studio through a minimal editorial layout. As the user scrolls, the artwork separates into layers, the headline shifts to create visual hierarchy, and studio metrics transition through a controlled animation sequence.
+
+### Key Features
+
+* **Animated introduction:** Staggered entrance animations for the headline and artwork.
+* **Scroll-driven storytelling:** The hero composition evolves as the user scrolls.
+* **Layered SVG artwork:** Independent transforms create depth and movement.
+* **Metric transitions:** Studio highlights change throughout the scroll sequence.
+* **Scroll progress indicator:** A progress bar communicates the animation journey.
+* **Responsive layout:** Desktop and mobile animation values are adjusted for different screen sizes.
+* **Reduced-motion support:** Respects the operating system's reduced-motion preference.
+* **Production-ready build:** TypeScript checks and the optimized Next.js build complete successfully.
+
+## Tech Stack
+
+* **Framework:** Next.js 16
+* **UI:** React and TypeScript
+* **Styling:** CSS and Tailwind CSS
+* **Animation:** GSAP 3 with ScrollTrigger
+* **Build:** Next.js production build with Turbopack
 
 ## Getting Started
 
-First, run the development server:
+### Prerequisites
+
+* Node.js and npm
+* Git
+
+### Installation
+
+Clone the repository and navigate to the project directory:
+
+```bash
+git clone <your-repository-url>
+cd itzfizz-scroll-hero
+```
+
+Install dependencies:
+
+```bash
+npm install
+```
+
+Start the development server:
 
 ```bash
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Open http://localhost:3000 in your browser.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## Production Build
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+Create an optimized production build:
 
-## Learn More
+```bash
+npm run build
+```
 
-To learn more about Next.js, take a look at the following resources:
+Run the production server locally:
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+```bash
+npm run start
+```
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+Then open http://localhost:3000.
 
-## Deploy on Vercel
+## Animation Architecture
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+The hero separates presentation from animation logic to keep the implementation maintainable.
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+```text
+app/
+  page.tsx
+  layout.tsx
+  globals.css
+
+components/
+  hero/
+    Hero.tsx
+    HeroBrand.tsx
+    HeroHeadline.tsx
+    HeroMetric.tsx
+    HeroProgress.tsx
+    HeroVisual.tsx
+
+animations/
+  hero/
+    scroll.ts
+
+data/
+  hero.ts
+```
+
+### Animation Sequence
+
+1. **Introduction:** The headline and artwork enter with staggered fade-and-rise animations.
+2. **Composition movement:** The artwork scales and shifts as scrolling begins.
+3. **Structural reveal:** Individual SVG layers move independently to create depth.
+4. **Visual transition:** The headline adjusts in scale and position while supporting text recedes.
+5. **Metric sequence:** Studio highlights transition as the user progresses through the hero.
+6. **Final composition:** The artwork settles into its final arrangement and the progress indicator completes.
+
+GSAP's `ScrollTrigger` pins the hero stage during the scroll sequence. The animation uses a responsive scroll distance and a scrubbed timeline to connect motion to the user's scroll position.
+
+## Accessibility and Responsiveness
+
+* Uses `prefers-reduced-motion` to disable the main animated sequence when reduced motion is requested.
+* Uses semantic HTML elements and accessible labels for major sections.
+* Updates metric visibility attributes as the active metric changes.
+* Adjusts artwork movement and scaling for mobile screens.
+
+## Author
+
+**Tejas A.**
+
+GitHub: [coderTejas565](https://github.com/coderTejas565)
+
+LinkedIn: [tejas-a-5174b0399](https://www.linkedin.com/in/tejas-a-5174b0399)
+
+---
+
+Built as part of the Itzfizz Digital internship assignment.
