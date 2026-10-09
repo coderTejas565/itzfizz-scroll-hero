@@ -1,172 +1,158 @@
 export function HeroVisual() {
-  const ticks = Array.from({ length: 24 });
-
   return (
     <div className="hero-visual" aria-hidden="true">
       <svg
         className="hero-visual__svg"
-        viewBox="0 0 500 500"
+        viewBox="0 0 600 600"
         fill="none"
         xmlns="http://www.w3.org/2000/svg"
       >
-        {/* Outer measurement system */}
-        <g className="hero-visual__outer">
-          <circle
-            className="hero-visual__ring hero-visual__ring--outer"
-            cx="250"
-            cy="250"
-            r="192"
-          />
-
-          <circle
-            className="hero-visual__ring hero-visual__ring--inner"
-            cx="250"
-            cy="250"
-            r="174"
-          />
-
-          <g className="hero-visual__ticks">
-            {ticks.map((_, index) => {
-              const angle = index * 15;
-              const major = index % 4 === 0;
-
-              return (
-                <line
-                  key={angle}
-                  className={
-                    major
-                      ? "hero-visual__tick hero-visual__tick--major"
-                      : "hero-visual__tick"
-                  }
-                  x1="250"
-                  y1={major ? "52" : "58"}
-                  x2="250"
-                  y2={major ? "68" : "64"}
-                  transform={`rotate(${angle} 250 250)`}
-                />
-              );
-            })}
-          </g>
-        </g>
-
-        {/* Asymmetric orbital system */}
-        <g className="hero-visual__orbit-system">
-          <ellipse
-            className="hero-visual__ring hero-visual__ring--orbit"
-            cx="250"
-            cy="250"
-            rx="214"
-            ry="112"
-            transform="rotate(-24 250 250)"
-          />
-
-          <ellipse
-            className="hero-visual__ring hero-visual__ring--orbit-secondary"
-            cx="250"
-            cy="250"
-            rx="118"
-            ry="208"
-            transform="rotate(34 250 250)"
-          />
-
-          <path
-            className="hero-visual__orbit-cut"
-            d="M83 174C126 111 205 75 285 82C365 89 423 133 444 193"
-          />
-
-          <circle
-            className="hero-visual__orbit-point"
-            cx="444"
-            cy="193"
-            r="4"
-          />
-
-          <circle
-            className="hero-visual__orbit-point hero-visual__orbit-point--small"
-            cx="101"
-            cy="318"
-            r="3"
-          />
-        </g>
-
-        {/* Structural axis */}
-        <g className="hero-visual__crosshair">
-          <path d="M250 72V428" />
-          <path d="M72 250H428" />
-        </g>
-
-        {/* Main geometric core */}
-        <g className="hero-visual__core-group">
-          <path
-            className="hero-visual__core-shape"
-            d="
-              M250 156
-              L330 202
-              L330 298
-              L250 344
-              L170 298
-              L170 202
-              Z
-            "
-          />
-
-          <path
-            className="hero-visual__core-inner"
-            d="
-              M250 181
-              L308 214
-              L308 286
-              L250 319
-              L192 286
-              L192 214
-              Z
-            "
-          />
-
-          <path
-            className="hero-visual__core-diagonal"
-            d="M192 214L308 286M308 214L192 286"
-          />
-
-          <path
-            className="hero-visual__core-axis"
-            d="M250 181V319M192 250H308"
-          />
-
-          <circle className="hero-visual__center" cx="250" cy="250" r="7" />
-        </g>
-
-        {/* Sparse registration points */}
-        <g className="hero-visual__markers">
-          <circle cx="250" cy="58" r="4" />
-          <circle cx="442" cy="250" r="4" />
-          <circle cx="250" cy="442" r="4" />
-          <circle cx="58" cy="250" r="4" />
-        </g>
-
-        {/* Direction indicators */}
-        <path
-          className="hero-visual__direction"
-          d="
-            M250 28V46
-            M472 250H454
-            M250 472V454
-            M28 250H46
-          "
+        {/* Ground shadow */}
+        <ellipse
+          cx="310"
+          cy="475"
+          rx="178"
+          ry="35"
+          fill="#171717"
+          opacity=".07"
         />
+
+        {/* Rear artwork panel */}
+        <g className="hero-visual__back-panel">
+          <rect
+            x="102"
+            y="145"
+            width="300"
+            height="370"
+            rx="3"
+            fill="#171717"
+          />
+          <text
+            x="128"
+            y="184"
+            fill="#F7F5F0"
+            fontSize="10"
+            letterSpacing="3"
+            fontFamily="monospace"
+          >
+            CREATIVE STUDIO
+          </text>
+          <path d="M128 202H376" stroke="#F7F5F0" strokeOpacity=".25" />
+          <text
+            x="125"
+            y="330"
+            fill="#F7F5F0"
+            fontSize="104"
+            fontWeight="700"
+            letterSpacing="-10"
+            fontFamily="Arial, sans-serif"
+          >
+            ITZ
+          </text>
+          <path d="M128 356H254" stroke="#FF6B2C" strokeWidth="5" />
+          <text
+            x="128"
+            y="390"
+            fill="#DCD6CC"
+            fontSize="11"
+            letterSpacing="1.5"
+            fontFamily="monospace"
+          >
+            IDEAS INTO IMPACT
+          </text>
+          <circle cx="348" cy="450" r="25" fill="#FF6B2C" />
+          <path
+            d="M335 450H361M348 437V463"
+            stroke="#171717"
+            strokeWidth="1.5"
+          />
+        </g>
+
+        {/* Front editorial panel */}
+        <g className="hero-visual__front-panel">
+          <rect x="236" y="92" width="270" height="370" rx="3" fill="#DCD6CC" />
+          <rect
+            x="249"
+            y="105"
+            width="244"
+            height="344"
+            rx="1"
+            fill="#F7F5F0"
+          />
+          <text
+            x="269"
+            y="133"
+            fill="#171717"
+            fontSize="9"
+            letterSpacing="2"
+            fontFamily="monospace"
+          >
+            BRAND / 026
+          </text>
+          <circle cx="460" cy="127" r="5" fill="#FF6B2C" />
+
+          {/* Editorial typography */}
+          <text
+            x="270"
+            y="413"
+            fill="#171717"
+            fontSize="34"
+            fontWeight="700"
+            letterSpacing="-2"
+            fontFamily="Arial, sans-serif"
+          >
+            MAKE
+          </text>
+          <text
+            x="270"
+            y="438"
+            fill="#171717"
+            fontSize="22"
+            fontWeight="400"
+            letterSpacing="-1"
+            fontFamily="Arial, sans-serif"
+          >
+            IT MATTER.
+          </text>
+        </g>
+
+        {/* Independent foreground sculpture */}
+        <g className="hero-visual__orange-form">
+          <path
+            d="
+              M288 217
+              C310 169 370 163 405 194
+              C435 220 420 260 386 280
+              C353 299 346 325 371 341
+              C393 355 427 339 438 315
+              C453 348 427 387 388 390
+              C342 394 308 359 315 324
+              C320 296 348 274 370 255
+              C392 235 387 212 367 207
+              C342 201 323 220 319 242
+              Z
+            "
+            fill="#FF6B2C"
+          />
+          <path
+            d="M288 217C272 246 280 278 302 293"
+            stroke="#171717"
+            strokeWidth="2"
+            strokeLinecap="round"
+          />
+        </g>
+
+        {/* Foreground registration details */}
+        <g className="hero-visual__details">
+          <path
+            d="M175 115H211M193 97V133"
+            stroke="#FF6B2C"
+            strokeWidth="1.5"
+          />
+          <circle cx="472" cy="474" r="4" fill="#FF6B2C" />
+          <path d="M447 474H462" stroke="#171717" strokeOpacity=".4" />
+        </g>
       </svg>
-
-      <div className="hero-visual__label mono">SYSTEM / 001</div>
-
-      <div className="hero-visual__data mono">
-        <span>VECTOR</span>
-        <span>04.17</span>
-      </div>
-
-      <div className="hero-visual__status mono">
-        <span className="hero-visual__status-dot" />
-        ACTIVE
-      </div>
     </div>
   );
 }

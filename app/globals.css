@@ -1,87 +1,55 @@
 @import "tailwindcss";
 
-/* ═══════════════════════════════════════════
-   DESIGN TOKENS
-═══════════════════════════════════════════ */
+/* ========================================
+   1. DESIGN TOKENS & GLOBALS
+======================================== */
 
 :root {
-  --color-bg: #f1eee8;
-  --color-text: #111111;
-  --color-text-muted: #77736d;
-  --color-text-dim: #aaa59d;
-  --color-accent: #e63232;
-  --color-line: #d7d2c9;
+  --color-ivory: #f7f5f0;
+  --color-black: #171717;
+  --color-orange: #ff6b2c;
+  --color-stone: #dcd6cc;
 
-  --font-display: var(--font-space-grotesk);
-  --font-mono: var(--font-plex-mono);
+  --font-display: "Space Grotesk", sans-serif;
+  --font-mono: "IBM Plex Mono", monospace;
 
-  --text-hero: clamp(4.5rem, 13vw, 12rem);
-  --text-display: clamp(3rem, 8vw, 8rem);
-  --text-metric: clamp(3.5rem, 8vw, 7rem);
-
-  --text-label: clamp(0.65rem, 0.8vw, 0.8rem);
-  --text-body: clamp(0.9rem, 1vw, 1rem);
-
-  --tracking-tight: -0.055em;
-  --tracking-normal: -0.02em;
-  --tracking-wide: 0.25em;
-
-  --space-xs: 0.5rem;
-  --space-sm: 1rem;
-  --space-md: 1.5rem;
-  --space-lg: 2rem;
-  --space-xl: 4rem;
-
-  --page-edge: clamp(1.25rem, 4vw, 4rem);
-
-  --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
-  --ease-in-out: cubic-bezier(0.83, 0, 0.17, 1);
-
-  --hero-height: 100svh;
+  --page-gutter: clamp(20px, 5vw, 76px);
 }
 
-/* ═══════════════════════════════════════════
-   RESET
-═══════════════════════════════════════════ */
-
-* {
+*,
+*::before,
+*::after {
   box-sizing: border-box;
 }
 
 html {
+  background: var(--color-ivory);
+  scroll-behavior: auto;
+}
+
+body {
   margin: 0;
-  padding: 0;
-  background: var(--color-bg);
-  color: var(--color-text);
+  color: var(--color-black);
+  background: var(--color-ivory);
   font-family: var(--font-display);
   -webkit-font-smoothing: antialiased;
   text-rendering: optimizeLegibility;
 }
 
-body {
-  margin: 0;
-  padding: 0;
-  min-height: 100vh;
-  background: var(--color-bg);
-  color: var(--color-text);
+body,
+button,
+input,
+textarea {
+  font-family: var(--font-display);
 }
 
 button,
-input,
-textarea,
-select {
-  font: inherit;
+a {
+  -webkit-tap-highlight-color: transparent;
 }
 
 button {
-  border: 0;
-  background: none;
-}
-
-img,
-svg {
-  display: block;
-  max-width: 100%;
+  color: inherit;
 }
 
 a {
@@ -89,592 +57,1117 @@ a {
   text-decoration: none;
 }
 
-/* ═══════════════════════════════════════════
-   TYPOGRAPHY
-═══════════════════════════════════════════ */
-
-.display {
-  font-family: var(--font-display);
-  font-weight: 600;
-  letter-spacing: var(--tracking-tight);
-  line-height: 0.86;
+::selection {
+  color: var(--color-ivory);
+  background: var(--color-orange);
 }
 
 .mono {
   font-family: var(--font-mono);
-  font-size: var(--text-label);
-  font-weight: 400;
-  letter-spacing: 0.04em;
-  line-height: 1.4;
-  text-transform: uppercase;
-}
-
-.label {
-  font-family: var(--font-display);
-  font-size: var(--text-label);
+  font-size: 10px;
   font-weight: 500;
-  letter-spacing: var(--tracking-wide);
-  line-height: 1;
-  text-transform: uppercase;
+  letter-spacing: 0.08em;
 }
 
-/* ═══════════════════════════════════════════
-   HERO
-═══════════════════════════════════════════ */
+/* ========================================
+   2. HERO CANVAS & BACKGROUND
+======================================== */
 
 .hero {
   position: relative;
-  min-height: 200vh;
-  overflow: hidden;
-  background: var(--color-bg);
+  isolation: isolate;
+  min-height: 200svh;
+  background: var(--color-ivory);
 }
-
-/* ═══════════════════════════════════════════
-   ATMOSPHERE
-═══════════════════════════════════════════ */
 
 .hero__atmosphere {
   position: absolute;
+  z-index: -2;
   inset: 0;
-  height: 100vh;
   pointer-events: none;
   background:
     radial-gradient(
-      circle at 72% 46%,
-      rgba(230, 50, 50, 0.055),
-      transparent 28%
+      ellipse at 76% 36%,
+      rgb(220 214 204 / 34%) 0%,
+      transparent 37%
     ),
-    radial-gradient(circle at 18% 82%, rgba(17, 17, 17, 0.025), transparent 32%);
+    linear-gradient(180deg, var(--color-ivory) 0%, #f3f0e9 100%);
 }
-
-/* ═══════════════════════════════════════════
-   EDITORIAL GRID
-═══════════════════════════════════════════ */
 
 .hero__grid {
   position: absolute;
-  z-index: 1;
+  z-index: -1;
   inset: 0;
   display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  padding: 0 var(--page-edge);
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  padding-inline: var(--page-gutter);
   pointer-events: none;
 }
 
 .hero__grid span {
-  border-left: 1px solid rgba(17, 17, 17, 0.055);
+  border-left: 1px solid rgb(23 23 23 / 5%);
 }
 
 .hero__grid span:last-child {
-  border-right: 1px solid rgba(17, 17, 17, 0.055);
+  border-right: 1px solid rgb(23 23 23 / 5%);
 }
 
-/* ═══════════════════════════════════════════
-   BRAND
-═══════════════════════════════════════════ */
+/* ========================================
+   3. STUDIO BRAND HEADER
+======================================== */
 
 .hero-brand {
   position: absolute;
-  z-index: 20;
+  z-index: 30;
   top: 0;
   left: 0;
   display: flex;
+  width: 100%;
   align-items: center;
   justify-content: space-between;
-  width: 100%;
-  padding: var(--page-edge);
-  color: var(--color-text-muted);
+  padding: 28px var(--page-gutter);
+  pointer-events: none;
+}
+
+.hero-brand__identity {
+  display: inline-flex;
+  align-items: center;
+  gap: 11px;
+  color: var(--color-black);
+  text-decoration: none;
+  pointer-events: auto;
 }
 
 .hero-brand__mark {
+  position: relative;
+  display: grid;
+  width: 30px;
+  height: 30px;
+  flex: 0 0 30px;
+  place-items: center;
+  overflow: hidden;
+  background: var(--color-black);
+}
+
+.hero-brand__mark-block {
+  position: absolute;
+  top: 6px;
+  left: 6px;
+  width: 11px;
+  height: 18px;
+  background: var(--color-ivory);
+}
+
+.hero-brand__mark-cut {
+  position: absolute;
+  top: 6px;
+  right: 6px;
+  width: 6px;
+  height: 11px;
+  background: var(--color-orange);
+}
+
+.hero-brand__mark-dot {
+  position: absolute;
+  right: 6px;
+  bottom: 6px;
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--color-ivory);
+}
+
+.hero-brand__wordmark {
+  font-family: var(--font-display);
+  font-size: 17px;
+  font-weight: 700;
+  letter-spacing: -0.075em;
+  line-height: 1;
+}
+
+.hero-brand__wordmark-period {
+  color: var(--color-orange);
+}
+
+.hero-brand__right {
+  display: flex;
+  align-items: flex-end;
+  flex-direction: column;
+  gap: 9px;
+}
+
+.hero-brand__descriptor {
+  color: rgb(23 23 23 / 48%);
+  font-size: 9px;
+  letter-spacing: 0.12em;
+}
+
+.hero-brand__edition {
   display: flex;
   align-items: center;
-  gap: 0.65rem;
-  color: var(--color-text);
-  font-size: 0.8rem;
-  font-weight: 600;
-  letter-spacing: -0.02em;
+  gap: 9px;
+  color: var(--color-black);
 }
 
-.hero-brand__dot {
-  width: 0.45rem;
-  height: 0.45rem;
+.hero-brand__status-dot {
+  width: 6px;
+  height: 6px;
+  flex: 0 0 6px;
   border-radius: 50%;
-  background: var(--color-accent);
+  background: var(--color-orange);
+  box-shadow: 0 0 0 3px rgb(255 107 44 / 12%);
 }
 
-/* ═══════════════════════════════════════════
-   STAGE
-═══════════════════════════════════════════ */
+.hero-brand__edition-label,
+.hero-brand__edition-number {
+  font-size: 9px;
+  letter-spacing: 0.07em;
+}
+
+.hero-brand__edition-divider {
+  width: 1px;
+  height: 12px;
+  background: rgb(23 23 23 / 20%);
+}
+
+.hero-brand__edition-number {
+  color: rgb(23 23 23 / 50%);
+}
+
+.hero-brand__identity:focus-visible {
+  outline: 2px solid var(--color-orange);
+  outline-offset: 6px;
+}
+
+/* ========================================
+   4. PINNED HERO STAGE
+======================================== */
 
 .hero__stage {
   position: relative;
   z-index: 5;
   display: flex;
+  width: 100%;
+  height: 100svh;
+  min-height: 650px;
   flex-direction: column;
   justify-content: center;
-  height: 100svh;
-  min-height: 100svh;
-  padding: var(--page-edge);
+  padding: 110px var(--page-gutter) 100px;
+  isolation: isolate;
 }
 
-/* ═══════════════════════════════════════════
-   HERO VISUAL
-═══════════════════════════════════════════ */
+/* ========================================
+   5. EDITORIAL HEADLINE
+======================================== */
+
+.hero-headline {
+  position: relative;
+  z-index: 10;
+  width: min(76%, 900px);
+  pointer-events: none;
+}
+
+.hero-headline__eyebrow {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin: 0 0 clamp(24px, 3.2vw, 42px);
+  color: rgb(23 23 23 / 58%);
+}
+
+.hero-headline__eyebrow-line {
+  display: block;
+  width: 30px;
+  height: 2px;
+  flex: 0 0 30px;
+  background: var(--color-orange);
+}
+
+.hero-headline__eyebrow > .mono {
+  font-size: 9px;
+  letter-spacing: 0.12em;
+}
+
+.hero-headline__index {
+  margin-left: auto;
+  color: rgb(23 23 23 / 42%);
+  font-size: 9px;
+  letter-spacing: 0.08em;
+}
+
+.hero-headline__index span {
+  margin-inline: 4px;
+  color: var(--color-orange);
+}
+
+.hero-headline__title {
+  max-width: 900px;
+  margin: 0;
+  font-family: var(--font-display);
+  font-size: clamp(78px, 11.5vw, 160px);
+  font-weight: 600;
+  line-height: 0.79;
+  letter-spacing: -0.105em;
+}
+
+.hero-headline__line {
+  position: relative;
+  display: block;
+  width: fit-content;
+  max-width: 100%;
+  padding-right: 0.12em;
+  overflow: visible;
+}
+
+.hero-headline__line + .hero-headline__line {
+  margin-top: 0.1em;
+}
+
+.hero-headline__word {
+  display: block;
+}
+
+.hero-headline__accent,
+.hero-headline__period {
+  color: var(--color-orange);
+}
+
+.hero-headline__side-note {
+  position: absolute;
+  top: 50%;
+  left: calc(100% + clamp(20px, 3vw, 44px));
+  width: max-content;
+  color: rgb(23 23 23 / 52%);
+  font-size: 9px;
+  line-height: 1.8;
+  letter-spacing: 0.1em;
+  transform: translateY(-50%);
+}
+
+.hero-headline__bottom {
+  display: flex;
+  align-items: flex-end;
+  gap: 16px;
+  margin-top: clamp(30px, 4vw, 54px);
+  padding-left: 4px;
+}
+
+.hero-headline__asterisk {
+  align-self: flex-start;
+  margin-top: 2px;
+  color: var(--color-orange);
+  font-size: 23px;
+  line-height: 1;
+}
+
+.hero-headline__statement {
+  max-width: 310px;
+  margin: 0;
+  color: rgb(23 23 23 / 76%);
+  font-size: clamp(13px, 1.05vw, 15px);
+  font-weight: 400;
+  line-height: 1.7;
+  letter-spacing: -0.015em;
+}
+
+.hero-headline__descriptor {
+  align-self: flex-end;
+  margin-left: auto;
+  padding-bottom: 3px;
+  color: rgb(23 23 23 / 43%);
+  font-size: 8px;
+  letter-spacing: 0.08em;
+  white-space: nowrap;
+}
+
+.hero-headline__descriptor span {
+  margin-inline: 3px;
+  color: var(--color-orange);
+}
+
+/* ========================================
+   6. ABSTRACT ARTWORK
+======================================== */
 
 .hero-visual {
   position: absolute;
   z-index: 4;
-  top: 50%;
-  right: 8vw;
-  width: min(38vw, 34rem);
+  top: 47%;
+  right: 6vw;
+  width: min(43vw, 38rem);
   aspect-ratio: 1;
+  overflow: visible;
   transform: translateY(-50%);
-  pointer-events: none;
+  transform-origin: 50% 50%;
+  backface-visibility: hidden;
+  will-change: transform, opacity;
 }
 
 .hero-visual__svg {
+  display: block;
   width: 100%;
   height: 100%;
   overflow: visible;
 }
 
-/* Outer measurement system */
-
-.hero-visual__ring {
-  fill: none;
-  stroke: rgba(17, 17, 17, 0.14);
-  stroke-width: 1;
+.hero-visual__back-panel,
+.hero-visual__front-panel,
+.hero-visual__orange-form,
+.hero-visual__details {
+  transform-box: fill-box;
+  transform-origin: center;
+  backface-visibility: hidden;
+  will-change: transform, opacity;
 }
 
-.hero-visual__ring--outer {
-  stroke: rgba(17, 17, 17, 0.22);
+.hero-visual__back-panel rect {
+  filter: drop-shadow(0 22px 30px rgb(23 23 23 / 9%));
 }
 
-.hero-visual__ring--inner {
-  stroke: rgba(17, 17, 17, 0.07);
+.hero-visual__front-panel > rect:first-child {
+  filter: drop-shadow(0 22px 30px rgb(23 23 23 / 8%));
 }
 
-/* Measurement ticks */
-
-.hero-visual__ticks {
+.hero-visual__orange-form {
   transform-origin: center;
 }
 
-.hero-visual__tick {
-  stroke: rgba(17, 17, 17, 0.11);
-  stroke-width: 1;
-}
-
-.hero-visual__tick--major {
-  stroke: rgba(17, 17, 17, 0.24);
-}
-
-/* Orbital system */
-
-.hero-visual__orbit-system {
-  transform-origin: center;
-}
-
-.hero-visual__ring--orbit {
-  stroke: rgba(17, 17, 17, 0.12);
-}
-
-.hero-visual__ring--orbit-secondary {
-  stroke: rgba(17, 17, 17, 0.07);
-}
-
-.hero-visual__orbit-cut {
-  stroke: rgba(17, 17, 17, 0.18);
-  stroke-width: 1;
-}
-
-.hero-visual__orbit-point {
-  fill: var(--color-accent);
-}
-
-.hero-visual__orbit-point--small {
-  opacity: 0.55;
-}
-
-/* Structural axis */
-
-.hero-visual__crosshair {
-  stroke: rgba(17, 17, 17, 0.055);
-  stroke-width: 1;
-}
-
-/* Geometric core */
-
-.hero-visual__core-group {
-  transform-origin: center;
-}
-
-.hero-visual__core-shape {
-  fill: rgba(17, 17, 17, 0.018);
-  stroke: rgba(17, 17, 17, 0.28);
-  stroke-width: 1;
-}
-
-.hero-visual__core-inner {
-  fill: none;
-  stroke: rgba(17, 17, 17, 0.13);
-  stroke-width: 1;
-}
-
-.hero-visual__core-diagonal {
-  stroke: rgba(17, 17, 17, 0.08);
-  stroke-width: 1;
-}
-
-.hero-visual__core-axis {
-  stroke: rgba(17, 17, 17, 0.13);
-  stroke-width: 1;
-}
-
-.hero-visual__center {
-  fill: var(--color-accent);
-}
-
-/* Registration points */
-
-.hero-visual__markers circle {
-  fill: var(--color-accent);
-}
-
-/* Direction indicators */
-
-.hero-visual__direction {
-  stroke: rgba(17, 17, 17, 0.18);
-  stroke-width: 1;
-}
-
-/* Visual metadata */
-
-.hero-visual__label {
-  position: absolute;
-  top: 12%;
-  right: 2%;
-  color: var(--color-text-dim);
-}
-
-.hero-visual__data {
-  position: absolute;
-  right: 2%;
-  bottom: 12%;
-  display: flex;
-  gap: 0.75rem;
-  color: var(--color-text-dim);
-}
-
+.hero-visual__label,
 .hero-visual__status {
   position: absolute;
-  left: 2%;
-  bottom: 12%;
-  display: flex;
-  align-items: center;
-  gap: 0.5rem;
-  color: var(--color-text-dim);
-}
-
-.hero-visual__status-dot {
-  width: 4px;
-  height: 4px;
-  border-radius: 50%;
-  background: var(--color-accent);
-}
-
-/* ═══════════════════════════════════════════
-   HEADLINE
-═══════════════════════════════════════════ */
-
-.hero-headline {
-  position: relative;
-  z-index: 10;
-  margin-top: -4vh;
-}
-
-.hero-headline__eyebrow {
-  display: block;
-  margin-bottom: 1.25rem;
-  color: var(--color-accent);
-}
-
-.hero-headline__title {
-  margin: 0;
-  color: var(--color-text);
-  font-family: var(--font-display);
-  font-size: var(--text-hero);
-  font-weight: 600;
-  line-height: 0.78;
-  letter-spacing: -0.075em;
+  z-index: 6;
+  color: rgb(23 23 23 / 65%);
+  font-size: 9px;
   white-space: nowrap;
 }
 
-.hero-headline__statement {
-  max-width: 22rem;
-  margin: 2.5rem 0 0;
-  color: var(--color-text-muted);
-  font-size: clamp(1rem, 1.3vw, 1.25rem);
-  font-weight: 400;
-  line-height: 1.35;
-  letter-spacing: -0.025em;
+.hero-visual__label {
+  top: 9%;
+  right: 0;
 }
 
-/* ═══════════════════════════════════════════
-   METRIC — EDITORIAL DATA OBJECT
-═══════════════════════════════════════════ */
+.hero-visual__status {
+  bottom: 8%;
+  left: 7%;
+  display: flex;
+  align-items: center;
+  gap: 9px;
+}
+
+.hero-visual__status-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--color-orange);
+}
+
+/* ========================================
+   7. EDITORIAL METRICS PANEL
+======================================== */
 
 .hero-metric {
   position: absolute;
   z-index: 15;
-  right: var(--page-edge);
+  right: var(--page-gutter);
   bottom: 10vh;
-  width: min(38rem, 42vw);
+  width: min(34rem, 39vw);
+  color: var(--color-black);
+}
+
+.hero-metric__header {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 20px;
+  margin-bottom: 18px;
+}
+
+.hero-metric__heading {
+  display: flex;
+  flex-direction: column;
+  gap: 7px;
+}
+
+.hero-metric__eyebrow {
+  color: rgb(23 23 23 / 52%);
+  font-size: 9px;
+  letter-spacing: 0.12em;
+}
+
+.hero-metric__subheading {
+  font-size: 13px;
+  font-weight: 500;
+  letter-spacing: -0.035em;
 }
 
 .hero-metric__index {
-  margin-bottom: 1rem;
-  color: var(--color-text-dim);
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  padding-bottom: 2px;
+  color: rgb(23 23 23 / 45%);
+  font-size: 9px;
+}
+
+.hero-metric__index-current {
+  color: var(--color-orange);
+}
+
+.hero-metric__index-divider {
+  color: rgb(23 23 23 / 28%);
 }
 
 .hero-metric__line {
   width: 100%;
   height: 1px;
-  margin-bottom: 1.25rem;
-  background: var(--color-line);
+  margin-bottom: 22px;
+  background: rgb(23 23 23 / 22%);
+  transform: scaleX(0);
   transform-origin: left center;
 }
 
 .hero-metric__stack {
   position: relative;
-  min-height: 10rem;
+  min-height: 126px;
 }
 
 .hero-metric__item {
   position: absolute;
   inset: 0;
+  visibility: hidden;
   opacity: 0;
-  pointer-events: none;
+  transform: translateY(20px);
+  will-change: transform, opacity;
 }
 
 .hero-metric__item:first-child {
+  position: relative;
+  visibility: visible;
   opacity: 1;
+  transform: translateY(0);
 }
 
 .hero-metric__content {
-  display: block;
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
+  align-items: start;
+  gap: clamp(18px, 2.3vw, 32px);
 }
 
 .hero-metric__value {
   display: block;
-  color: var(--color-text);
+  color: var(--color-orange);
   font-family: var(--font-display);
-  font-size: clamp(5rem, 11vw, 10rem);
-  font-weight: 500;
-  line-height: 0.78;
+  font-size: clamp(58px, 6.5vw, 88px);
+  font-weight: 600;
+  line-height: 0.9;
   letter-spacing: -0.085em;
-  will-change: opacity;
-  backface-visibility: hidden;
+  white-space: nowrap;
 }
 
 .hero-metric__copy {
+  min-width: 0;
+  padding-top: 5px;
+}
+
+.hero-metric__label {
+  display: block;
+  color: #393630;
+  font-size: 13px;
+  font-weight: 500;
+  line-height: 1.4;
+  letter-spacing: -0.02em;
+}
+
+.hero-metric__description {
+  max-width: 230px;
+  margin: 7px 0 0;
+  color: #858078;
+  font-size: 11px;
+  line-height: 1.6;
+}
+
+.hero-metric__item-index {
+  display: block;
+  margin-top: 20px;
+  color: rgb(23 23 23 / 36%);
+  font-size: 8px;
+  letter-spacing: 0.1em;
+}
+
+.hero-metric__footer {
   display: flex;
-  align-items: flex-start;
-  gap: 2rem;
-  margin-top: 1.5rem;
-  padding-left: 0.4rem;
-  will-change: opacity;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  margin-top: 20px;
+  padding-top: 14px;
+  border-top: 1px solid rgb(23 23 23 / 12%);
 }
 
-.hero-metric__copy .label {
-  flex: 0 0 10rem;
-  padding-top: 0.15rem;
-  color: var(--color-text);
+.hero-metric__footnote {
+  color: rgb(23 23 23 / 43%);
+  font-size: 8px;
+  letter-spacing: 0.08em;
 }
 
-.hero-metric__copy p {
-  max-width: 15rem;
-  margin: 0;
-  color: var(--color-text-muted);
-  font-family: var(--font-mono);
-  font-size: 0.7rem;
-  line-height: 1.55;
-  letter-spacing: 0.01em;
+.hero-metric__footer-right {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  color: rgb(23 23 23 / 56%);
 }
 
-/* ═══════════════════════════════════════════
-   PROGRESS
-═══════════════════════════════════════════ */
+.hero-metric__footer-right .mono {
+  font-size: 8px;
+  letter-spacing: 0.07em;
+}
+
+.hero-metric__footer-status {
+  width: 5px;
+  height: 5px;
+  flex: 0 0 5px;
+  border-radius: 50%;
+  background: var(--color-orange);
+}
+
+.hero-metric__footer-mark {
+  display: inline-grid;
+  width: 22px;
+  height: 22px;
+  margin-left: 5px;
+  place-items: center;
+  border: 1px solid rgb(23 23 23 / 18%);
+  border-radius: 50%;
+  color: var(--color-black);
+  font-size: 12px;
+}
+
+/* ========================================
+   8. SCROLL JOURNEY INDICATOR
+======================================== */
 
 .hero-progress {
   position: absolute;
-  z-index: 30;
+  z-index: 40;
   top: 50%;
-  right: var(--page-edge);
+  right: var(--page-gutter);
+  left: var(--page-gutter);
   display: flex;
   align-items: center;
-  gap: 0.75rem;
+  justify-content: space-between;
+  gap: 24px;
+  pointer-events: none;
   transform: translateY(-50%);
+}
+
+.hero-progress__journey {
+  display: flex;
+  width: clamp(130px, 18vw, 220px);
+  align-items: center;
+  gap: 12px;
+}
+
+.hero-progress__number {
+  flex: 0 0 auto;
+  color: rgb(23 23 23 / 50%);
+  font-size: 9px;
+  letter-spacing: 0.08em;
+}
+
+.hero-progress__number--end {
+  color: rgb(23 23 23 / 35%);
 }
 
 .hero-progress__track {
   position: relative;
-  width: 4rem;
+  width: 100%;
   height: 1px;
-  background: var(--color-line);
+  overflow: hidden;
+  background: rgb(23 23 23 / 20%);
 }
 
 .hero-progress__fill {
-  position: absolute;
-  inset: 0 auto 0 0;
-  width: 25%;
-  background: var(--color-accent);
+  width: 100%;
+  height: 100%;
+  background: var(--color-orange);
+  transform: scaleX(0);
+  transform-origin: left center;
+  will-change: transform;
 }
 
-/* ═══════════════════════════════════════════
-   FOOTER
-═══════════════════════════════════════════ */
+.hero-progress__cue {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  color: rgb(23 23 23 / 58%);
+}
+
+.hero-progress__cue-icon {
+  position: relative;
+  display: flex;
+  width: 17px;
+  height: 25px;
+  align-items: flex-start;
+  justify-content: center;
+  padding-top: 5px;
+  border: 1px solid rgb(23 23 23 / 38%);
+  border-radius: 10px;
+}
+
+.hero-progress__cue-icon span {
+  width: 2px;
+  height: 5px;
+  border-radius: 2px;
+  background: var(--color-orange);
+}
+
+.hero-progress__label {
+  font-size: 8px;
+  letter-spacing: 0.11em;
+}
+
+/* ========================================
+   9. FOOTER
+======================================== */
 
 .hero__footer {
   position: absolute;
-  z-index: 20;
-  left: 0;
+  z-index: 30;
+  right: 0;
   bottom: 0;
+  left: 0;
   display: flex;
   align-items: center;
   justify-content: space-between;
-  width: 100%;
-  padding: 1.5rem var(--page-edge);
-  color: var(--color-text-dim);
+  padding: 28px var(--page-gutter);
+  color: rgb(23 23 23 / 55%);
+  pointer-events: none;
 }
 
-/* ═══════════════════════════════════════════
-   REDUCED MOTION
-═══════════════════════════════════════════ */
+.hero__footer span {
+  font-size: 9px;
+}
+
+/* ========================================
+   10. GSAP COMPATIBILITY
+======================================== */
+
+.hero,
+.hero__stage,
+.hero-headline,
+.hero-visual {
+  backface-visibility: hidden;
+}
+
+.hero-headline__title,
+.hero-headline__eyebrow,
+.hero-headline__statement,
+.hero-metric__item,
+.hero-visual,
+.hero-visual__back-panel,
+.hero-visual__front-panel,
+.hero-visual__orange-form,
+.hero-visual__details,
+.hero-progress__fill {
+  transition: none;
+}
+
+/* ========================================
+   11. TABLET
+======================================== */
+
+@media (max-width: 1024px) {
+  .hero-headline {
+    width: 78%;
+  }
+
+  .hero-headline__title {
+    font-size: clamp(76px, 12vw, 124px);
+  }
+
+  .hero-headline__side-note {
+    left: calc(100% + 20px);
+    font-size: 8px;
+  }
+
+  .hero-headline__descriptor {
+    font-size: 7px;
+  }
+
+  .hero-visual {
+    right: -2vw;
+    width: 47vw;
+  }
+
+  .hero-metric {
+    width: min(34rem, 48vw);
+  }
+
+  .hero-metric__value {
+    font-size: clamp(52px, 6.5vw, 72px);
+  }
+
+  .hero-metric__content {
+    gap: 20px;
+  }
+}
+
+/* ========================================
+   12. MOBILE
+======================================== */
+
+@media (max-width: 768px) {
+  .hero {
+    min-height: 180svh;
+  }
+
+  .hero-brand {
+    padding-top: 22px;
+    padding-bottom: 22px;
+  }
+
+  .hero-brand__mark {
+    width: 26px;
+    height: 26px;
+    flex-basis: 26px;
+  }
+
+  .hero-brand__mark-block {
+    top: 5px;
+    left: 5px;
+    width: 10px;
+    height: 16px;
+  }
+
+  .hero-brand__mark-cut {
+    top: 5px;
+    right: 5px;
+    width: 6px;
+    height: 10px;
+  }
+
+  .hero-brand__mark-dot {
+    right: 5px;
+    bottom: 5px;
+    width: 6px;
+    height: 6px;
+  }
+
+  .hero-brand__wordmark {
+    font-size: 15px;
+  }
+
+  .hero-brand__right {
+    gap: 7px;
+  }
+
+  .hero-brand__descriptor {
+    font-size: 7px;
+    letter-spacing: 0.08em;
+  }
+
+  .hero-brand__edition {
+    gap: 6px;
+  }
+
+  .hero-brand__edition-label,
+  .hero-brand__edition-number {
+    font-size: 7px;
+  }
+
+  .hero__stage {
+    min-height: 600px;
+    padding: 100px var(--page-gutter) 90px;
+  }
+
+  .hero-headline {
+    width: 100%;
+    margin-top: -12vh;
+  }
+
+  .hero-headline__eyebrow {
+    gap: 9px;
+    margin-bottom: 30px;
+  }
+
+  .hero-headline__eyebrow-line {
+    width: 20px;
+    flex-basis: 20px;
+  }
+
+  .hero-headline__eyebrow > .mono,
+  .hero-headline__index {
+    font-size: 8px;
+  }
+
+  .hero-headline__title {
+    font-size: clamp(68px, 15.5vw, 112px);
+    line-height: 0.84;
+    letter-spacing: -0.095em;
+  }
+
+  .hero-headline__line + .hero-headline__line {
+    margin-top: 0.12em;
+  }
+
+  .hero-headline__side-note {
+    left: calc(100% + 8px);
+    font-size: 7px;
+    letter-spacing: 0.04em;
+  }
+
+  .hero-headline__bottom {
+    gap: 11px;
+    margin-top: 30px;
+    padding-left: 0;
+  }
+
+  .hero-headline__asterisk {
+    font-size: 19px;
+  }
+
+  .hero-headline__statement {
+    font-size: 12px;
+    line-height: 1.65;
+  }
+
+  .hero-headline__descriptor {
+    display: none;
+  }
+
+  .hero-visual {
+    top: 37%;
+    right: -10%;
+    width: 76vw;
+    max-width: 100%;
+    opacity: 0.78;
+  }
+
+  .hero-visual__label {
+    top: 8%;
+    right: 4%;
+    font-size: 8px;
+  }
+
+  .hero-visual__status {
+    bottom: 6%;
+    left: 8%;
+    font-size: 8px;
+  }
+
+  .hero-metric {
+    right: var(--page-gutter);
+    bottom: 16vh;
+    left: var(--page-gutter);
+    width: auto;
+  }
+
+  .hero-metric__header {
+    margin-bottom: 14px;
+  }
+
+  .hero-metric__eyebrow {
+    font-size: 8px;
+  }
+
+  .hero-metric__subheading {
+    font-size: 12px;
+  }
+
+  .hero-metric__line {
+    margin-bottom: 19px;
+  }
+
+  .hero-metric__stack {
+    min-height: 112px;
+  }
+
+  .hero-metric__content {
+    grid-template-columns: auto minmax(0, 1fr);
+    gap: 20px;
+  }
+
+  .hero-metric__value {
+    font-size: clamp(48px, 12vw, 68px);
+  }
+
+  .hero-metric__label {
+    font-size: 12px;
+  }
+
+  .hero-metric__description {
+    margin-top: 7px;
+    font-size: 11px;
+    line-height: 1.55;
+  }
+
+  .hero-metric__item-index {
+    margin-top: 15px;
+    font-size: 7px;
+  }
+
+  .hero-metric__footer {
+    margin-top: 16px;
+    padding-top: 12px;
+  }
+
+  .hero-metric__footnote,
+  .hero-metric__footer-right .mono {
+    font-size: 7px;
+  }
+
+  .hero-progress {
+    top: auto;
+    right: var(--page-gutter);
+    bottom: 27px;
+    left: var(--page-gutter);
+    align-items: center;
+    transform: none;
+  }
+
+  .hero-progress__journey {
+    width: clamp(100px, 32vw, 160px);
+    gap: 8px;
+  }
+
+  .hero-progress__number {
+    font-size: 8px;
+  }
+
+  .hero-progress__cue {
+    gap: 7px;
+  }
+
+  .hero-progress__cue-icon {
+    width: 14px;
+    height: 21px;
+    padding-top: 4px;
+  }
+
+  .hero-progress__label {
+    font-size: 7px;
+    letter-spacing: 0.07em;
+  }
+
+  .hero__footer {
+    padding-top: 22px;
+    padding-bottom: 22px;
+  }
+}
+
+/* ========================================
+   13. SMALL PHONES
+======================================== */
+
+@media (max-width: 420px) {
+  .hero-brand__wordmark {
+    font-size: 14px;
+  }
+
+  .hero__stage {
+    min-height: 580px;
+  }
+
+  .hero-headline {
+    margin-top: -10vh;
+  }
+
+  .hero-headline__title {
+    font-size: clamp(62px, 16vw, 78px);
+  }
+
+  .hero-headline__side-note {
+    display: none;
+  }
+
+  .hero-headline__statement {
+    max-width: 230px;
+    font-size: 12px;
+  }
+
+  .hero-visual {
+    top: 34%;
+    right: -17%;
+    width: 84vw;
+    opacity: 0.68;
+  }
+
+  .hero-metric {
+    bottom: 15vh;
+  }
+
+  .hero-metric__content {
+    grid-template-columns: 1fr;
+    gap: 12px;
+  }
+
+  .hero-metric__value {
+    font-size: clamp(48px, 13vw, 60px);
+  }
+
+  .hero-metric__copy {
+    padding-top: 0;
+  }
+
+  .hero-metric__stack {
+    min-height: 145px;
+  }
+
+  .hero-metric__item-index {
+    margin-top: 12px;
+  }
+
+  .hero-metric__footer-right {
+    gap: 5px;
+  }
+
+  .hero-metric__footer-mark {
+    width: 19px;
+    height: 19px;
+    margin-left: 2px;
+  }
+
+  .hero__footer span {
+    font-size: 8px;
+  }
+}
+
+/* ========================================
+   14. EXTRA-SMALL PHONES
+======================================== */
+
+@media (max-width: 380px) {
+  .hero-brand__descriptor {
+    display: none;
+  }
+
+  .hero-brand__wordmark {
+    font-size: 14px;
+  }
+}
+
+@media (max-width: 360px) {
+  .hero-progress__label {
+    font-size: 6px;
+  }
+
+  .hero-progress__journey {
+    width: 100px;
+  }
+}
+
+/* ========================================
+   15. ACCESSIBILITY
+======================================== */
 
 @media (prefers-reduced-motion: reduce) {
   *,
   *::before,
   *::after {
     scroll-behavior: auto !important;
-  }
-}
-
-/* ═══════════════════════════════════════════
-   TABLET / MOBILE
-═══════════════════════════════════════════ */
-
-@media (max-width: 768px) {
-  .hero {
-    min-height: 180vh;
-  }
-
-  .hero-brand {
-    align-items: flex-start;
-  }
-
-  .hero-brand > .mono {
-    display: none;
-  }
-
-  .hero__stage {
-    justify-content: center;
-  }
-
-  .hero-headline {
-    margin-top: -8vh;
-  }
-
-  .hero-headline__title {
-    font-size: clamp(4rem, 20vw, 7rem);
-  }
-
-  .hero-headline__statement {
-    margin-top: 2rem;
-  }
-
-  /* Visual */
-
-  .hero-visual {
-    top: 38%;
-    right: -8%;
-    width: 72vw;
-    opacity: 0.75;
-  }
-
-  .hero-visual__label,
-  .hero-visual__data,
-  .hero-visual__status {
-    display: none;
-  }
-
-  /* Metric */
-
-  .hero-metric {
-    right: var(--page-edge);
-    bottom: 16vh;
-    left: var(--page-edge);
-    width: auto;
-  }
-
-  .hero-metric__stack {
-    min-height: 10rem;
-  }
-
-  .hero-metric__value {
-    font-size: clamp(4.5rem, 21vw, 7rem);
-  }
-
-  .hero-metric__copy {
-    gap: 1rem;
-    margin-top: 1.25rem;
-    padding-left: 0;
-  }
-
-  .hero-metric__copy .label {
-    flex-basis: 8rem;
-  }
-
-  .hero-metric__copy p {
-    max-width: 13rem;
-  }
-
-  /* Progress */
-
-  .hero-progress {
-    top: auto;
-    right: var(--page-edge);
-    bottom: 5rem;
-    transform: none;
-  }
-
-  /* Footer */
-
-  .hero__footer {
-    bottom: 0.5rem;
-  }
-
-  /* Grid */
-
-  .hero__grid {
-    grid-template-columns: repeat(2, 1fr);
-  }
-
-  .hero__grid span:nth-child(3) {
-    display: none;
-  }
-}
-
-/* ═══════════════════════════════════════════
-   SMALL SCREENS
-═══════════════════════════════════════════ */
-
-@media (max-width: 640px) {
-  :root {
-    --page-edge: 1.25rem;
-    --text-hero: clamp(3.5rem, 18vw, 6rem);
-    --text-display: clamp(2.75rem, 14vw, 5rem);
-    --text-metric: clamp(3rem, 16vw, 5rem);
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
   }
 }

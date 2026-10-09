@@ -5,15 +5,11 @@ type HeroMetricProps = {
 };
 
 export function HeroMetric({ metrics }: HeroMetricProps) {
+  if (metrics.length === 0) return null;
+
   return (
-    <div className="hero-metric">
-      <div className="hero-metric__index mono">
-        01 / {String(metrics.length).padStart(2, "0")}
-      </div>
-
-      <div className="hero-metric__line" aria-hidden="true" />
-
-      <div className="hero-metric__stack">
+    <section className="hero-metric" aria-label="Studio highlights">
+      <div className="hero-metric__stack" aria-live="off">
         {metrics.map((metric, index) => (
           <div
             key={`${metric.value}-${metric.label}`}
@@ -25,14 +21,14 @@ export function HeroMetric({ metrics }: HeroMetricProps) {
               <span className="hero-metric__value">{metric.value}</span>
 
               <div className="hero-metric__copy">
-                <span className="label">{metric.label}</span>
+                <span className="hero-metric__label">{metric.label}</span>
 
-                <p>{metric.description}</p>
+                <p className="hero-metric__description">{metric.description}</p>
               </div>
             </div>
           </div>
         ))}
       </div>
-    </div>
+    </section>
   );
 }

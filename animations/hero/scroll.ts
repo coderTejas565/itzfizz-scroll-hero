@@ -1,558 +1,476 @@
-"use client";
-
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 
-import type { HeroMetricData } from "@/data/hero";
-
 gsap.registerPlugin(ScrollTrigger);
 
-export function createHeroScrollAnimation(
-  root: HTMLElement,
-  metrics: HeroMetricData[],
-) {
-  const stage = root.querySelector(".hero__stage");
-  const eyebrow = root.querySelector(".hero-headline__eyebrow");
-  const title = root.querySelector(".hero-headline__title");
-  const statement = root.querySelector(".hero-headline__statement");
+export function createHeroScrollAnimation(root: HTMLElement) {
+  const stage = root.querySelector<HTMLElement>(".hero__stage");
+  const headline = root.querySelector<HTMLElement>(".hero-headline");
+  const title = root.querySelector<HTMLElement>(".hero-headline__title");
+  const eyebrow = root.querySelector<HTMLElement>(".hero-headline__eyebrow");
+  const statement = root.querySelector<HTMLElement>(
+    ".hero-headline__statement",
+  );
+  const visual = root.querySelector<HTMLElement>(".hero-visual");
 
-  const visual = root.querySelector(".hero-visual");
-  const visualSvg = root.querySelector(".hero-visual__svg");
+  const backPanel = root.querySelector<SVGGElement>(".hero-visual__back-panel");
+  const frontPanel = root.querySelector<SVGGElement>(
+    ".hero-visual__front-panel",
+  );
+  const orangeForm = root.querySelector<SVGGElement>(
+    ".hero-visual__orange-form",
+  );
+  const details = root.querySelector<SVGGElement>(".hero-visual__details");
 
-  const visualOuter = root.querySelector(".hero-visual__outer");
-  const visualTicks = root.querySelector(".hero-visual__ticks");
-  const orbitSystem = root.querySelector(".hero-visual__orbit-system");
-  const coreGroup = root.querySelector(".hero-visual__core-group");
+  const metricStack = root.querySelector<HTMLElement>(".hero-metric__stack");
+  const metricItems = Array.from(
+    root.querySelectorAll<HTMLElement>(".hero-metric__item"),
+  );
+  const metricLine = root.querySelector<HTMLElement>(".hero-metric__line");
+  const metricIndex = root.querySelector<HTMLElement>(
+    ".hero-metric__index-current",
+  );
+  const progress = root.querySelector<HTMLElement>(".hero-progress__fill");
 
-  const metric = root.querySelector(".hero-metric");
-  const metricIndex = root.querySelector(".hero-metric__index");
-  const metricLine = root.querySelector(".hero-metric__line");
-  const metricItems = root.querySelectorAll(".hero-metric__item");
+  if (!stage || !headline || !visual) {
+    console.error("[Hero] Required elements are missing.", {
+      stage: Boolean(stage),
+      headline: Boolean(headline),
+      visual: Boolean(visual),
+    });
 
-  const progress = root.querySelector(".hero-progress__fill");
-
-  if (
-    !stage ||
-    !eyebrow ||
-    !title ||
-    !statement ||
-    !visual ||
-    !visualSvg ||
-    !visualOuter ||
-    !visualTicks ||
-    !orbitSystem ||
-    !coreGroup ||
-    !metric ||
-    !metricIndex ||
-    !metricLine ||
-    !progress ||
-    metricItems.length === 0 ||
-    metrics.length === 0
-  ) {
-    return;
+    return () => {};
   }
 
-  const items = Array.from(metricItems) as HTMLElement[];
-  const indexElement = metricIndex as HTMLElement;
+  const reducedMotion = window.matchMedia(
+    "(prefers-reduced-motion: reduce)",
+  ).matches;
 
-  const context = gsap.context(() => {
-    const prefersReducedMotion = window.matchMedia(
-      "(prefers-reduced-motion: reduce)",
-    ).matches;
+  if (reducedMotion) {
+    gsap.set(
+      [
+        headline,
+        title,
+        eyebrow,
+        statement,
+        visual,
+        backPanel,
+        frontPanel,
+        orangeForm,
+        details,
+        ...metricItems,
+        metricLine,
+        progress,
+      ].filter(Boolean),
+      { clearProps: "all" },
+    );
 
-    if (prefersReducedMotion) {
-      gsap.set(eyebrow, { opacity: 1, y: 0 });
-      gsap.set(title, { opacity: 1, y: 0, scale: 1 });
-      gsap.set(statement, { opacity: 1, y: 0 });
-
-      gsap.set(visual, {
-        x: 0,
-        y: 0,
-        scale: 1,
-        rotation: 0,
-      });
-
-      gsap.set(visualSvg, {
-        rotation: 0,
-      });
-
-      gsap.set(visualOuter, {
-        rotation: 0,
-      });
-
-      gsap.set(visualTicks, {
-        rotation: 0,
-      });
-
-      gsap.set(orbitSystem, {
-        rotation: 0,
-      });
-
-      gsap.set(coreGroup, {
-        rotation: 0,
-      });
-
-      gsap.set(metric, { opacity: 1, y: 0 });
-      gsap.set(metricLine, { scaleX: 1 });
-
-      items.forEach((item, index) => {
-        gsap.set(item, {
-          opacity: index === 0 ? 1 : 0,
-        });
-      });
-
-      gsap.set(progress, { width: "100%" });
-
-      indexElement.textContent = `01 / ${String(metrics.length).padStart(
-        2,
-        "0",
-      )}`;
-
-      return;
+    if (metricStack) {
+      gsap.set(metricStack, { minHeight: 0 });
     }
 
-    /* ═══════════════════════════════════════
-       INITIAL STATE
-    ═══════════════════════════════════════ */
-
-    gsap.set(eyebrow, {
-      y: 20,
-      opacity: 0,
-    });
-
-    gsap.set(title, {
-      y: 40,
-      opacity: 0,
-      scale: 1,
-      transformOrigin: "left center",
-    });
-
-    gsap.set(statement, {
-      y: 24,
-      opacity: 0,
-    });
-
-    gsap.set(visual, {
+    gsap.set(metricItems, {
+      position: "relative",
+      inset: "auto",
+      autoAlpha: 1,
       x: 0,
       y: 0,
       scale: 1,
-      rotation: 0,
-      transformOrigin: "center center",
     });
 
-    gsap.set(visualSvg, {
-      rotation: 0,
-      transformOrigin: "center center",
+    metricItems.forEach((item) => {
+      item.setAttribute("aria-hidden", "false");
     });
 
-    /*
-     * Internal visual systems start aligned.
-     * Each layer will receive its own scroll-driven rotation.
-     */
-    gsap.set(visualOuter, {
-      rotation: 0,
-      transformOrigin: "center center",
+    return () => {};
+  }
+
+  const isMobile = window.matchMedia("(max-width: 768px)").matches;
+
+  const distance = (desktop: number, mobile: number) =>
+    isMobile ? mobile : desktop;
+
+  const context = gsap.context(() => {
+    // Intro: elements enter naturally when the page loads.
+    const intro = gsap.timeline({
+      defaults: { ease: "power3.out" },
     });
 
-    gsap.set(visualTicks, {
-      rotation: 0,
-      transformOrigin: "center center",
+    if (eyebrow) {
+      intro.from(eyebrow, {
+        autoAlpha: 0,
+        y: 18,
+        duration: 0.65,
+      });
+    }
+
+    if (title) {
+      intro.from(
+        title,
+        {
+          autoAlpha: 0,
+          y: 35,
+          duration: 0.9,
+          ease: "power4.out",
+        },
+        "-=0.3",
+      );
+    }
+
+    if (statement) {
+      intro.from(
+        statement,
+        {
+          autoAlpha: 0,
+          y: 18,
+          duration: 0.65,
+        },
+        "-=0.45",
+      );
+    }
+
+    intro.from(
+      visual,
+      {
+        autoAlpha: 0,
+        scale: 0.9,
+        y: 22,
+        duration: 1.05,
+        ease: "power4.out",
+      },
+      "-=0.65",
+    );
+
+    // Set the artwork's transform origin.
+    gsap.set(visual, {
+      transformOrigin: "50% 50%",
+      force3D: true,
     });
 
-    gsap.set(orbitSystem, {
-      rotation: 0,
-      transformOrigin: "center center",
+    [backPanel, frontPanel, orangeForm, details].forEach((layer) => {
+      if (layer) {
+        gsap.set(layer, {
+          transformBox: "fill-box",
+          transformOrigin: "center center",
+        });
+      }
     });
 
-    gsap.set(coreGroup, {
-      rotation: 0,
-      transformOrigin: "center center",
-    });
-
-    gsap.set(metric, {
-      y: 30,
-      opacity: 0,
-    });
-
-    gsap.set(metricLine, {
-      scaleX: 0,
+    // Metrics start with the first item visible.
+    gsap.set(metricItems, {
+      autoAlpha: 0,
+      y: 24,
+      scale: 0.98,
+      position: "absolute",
+      inset: 0,
       transformOrigin: "left center",
     });
 
-    items.forEach((item, index) => {
-      gsap.set(item, {
-        opacity: index === 0 ? 1 : 0,
-      });
-    });
-
-    /* ═══════════════════════════════════════
-       INTRO
-    ═══════════════════════════════════════ */
-
-    const intro = gsap.timeline({
-      defaults: {
-        ease: "power3.out",
-      },
-    });
-
-    intro
-      .to(eyebrow, {
+    if (metricItems[0]) {
+      gsap.set(metricItems[0], {
+        autoAlpha: 1,
         y: 0,
-        opacity: 1,
-        duration: 0.6,
-      })
-      .to(
-        title,
-        {
-          y: 0,
-          opacity: 1,
-          duration: 0.9,
-        },
-        "-=0.35",
-      )
-      .to(
-        statement,
-        {
-          y: 0,
-          opacity: 1,
-          duration: 0.7,
-        },
-        "-=0.5",
-      );
+        scale: 1,
+      });
+    }
 
-    /* ═══════════════════════════════════════
-       SCROLL SYSTEM
-    ═══════════════════════════════════════ */
+    metricItems.forEach((item, index) => {
+      item.setAttribute("aria-hidden", String(index !== 0));
+    });
 
-    const scrollTimeline = gsap.timeline({
+    if (metricIndex) {
+      metricIndex.textContent = "01";
+    }
+
+    if (metricLine) {
+      gsap.set(metricLine, {
+        scaleX: 0,
+        transformOrigin: "left center",
+      });
+    }
+
+    if (progress) {
+      gsap.set(progress, {
+        scaleX: 0,
+        transformOrigin: "left center",
+      });
+    }
+
+    // Scroll-driven story.
+    const scroll = gsap.timeline({
+      defaults: { ease: "none" },
       scrollTrigger: {
         trigger: root,
         start: "top top",
-        end: "bottom bottom",
-        scrub: 1.1,
+        end: () =>
+          `+=${Math.round(window.innerHeight * (isMobile ? 1.8 : 2.6))}`,
+        scrub: 0.8,
         pin: stage,
+        pinSpacing: true,
         anticipatePin: 1,
         invalidateOnRefresh: true,
+        onUpdate: (self) => {
+          if (!metricItems.length) return;
+
+          const activeIndex = Math.min(
+            metricItems.length - 1,
+            Math.floor(self.progress * metricItems.length),
+          );
+
+          metricItems.forEach((item, index) => {
+            item.setAttribute("aria-hidden", String(index !== activeIndex));
+          });
+
+          if (metricIndex) {
+            metricIndex.textContent = String(activeIndex + 1).padStart(2, "0");
+          }
+        },
       },
     });
 
-    /* ═══════════════════════════════════════
-       HEADLINE
-    ═══════════════════════════════════════ */
-
-    scrollTimeline.fromTo(
-      title,
-      {
-        y: 0,
-        scale: 1,
-        opacity: 1,
-      },
-      {
-        y: -8,
-        scale: 0.94,
-        opacity: 1,
-        duration: 0.25,
-        ease: "none",
-      },
-      0,
-    );
-
-    scrollTimeline.fromTo(
-      eyebrow,
-      {
-        y: 0,
-        opacity: 1,
-      },
-      {
-        y: -24,
-        opacity: 0,
-        duration: 0.22,
-        ease: "none",
-      },
-      0.05,
-    );
-
-    scrollTimeline.fromTo(
-      statement,
-      {
-        y: 0,
-        opacity: 1,
-      },
-      {
-        y: -20,
-        opacity: 0,
-        duration: 0.3,
-        ease: "none",
-      },
-      0.1,
-    );
-
-    scrollTimeline.fromTo(
-      title,
-      {
-        y: -8,
-        scale: 0.94,
-        opacity: 1,
-      },
-      {
-        y: -115,
-        scale: 0.58,
-        opacity: 0.48,
-        duration: 0.5,
-        ease: "none",
-      },
-      0.25,
-    );
-
-    /* ═══════════════════════════════════════
-       MAIN VISUAL MOVEMENT
-    ═══════════════════════════════════════ */
-
-    scrollTimeline.fromTo(
+    // Phase 1: move the composition forward.
+    scroll.to(
       visual,
       {
-        x: 0,
-        y: 0,
-        scale: 1,
-        rotation: 0,
-      },
-      {
-        x: -120,
-        y: 35,
-        scale: 0.72,
-        rotation: 55,
+        scale: distance(1.12, 1.035),
+        y: distance(-16, -6),
         duration: 1,
-        ease: "none",
       },
       0,
     );
 
-    scrollTimeline.fromTo(
-      visualSvg,
+    scroll.to(
+      headline,
       {
-        rotation: 0,
-      },
-      {
-        rotation: -35,
+        y: distance(-18, -8),
         duration: 1,
-        ease: "none",
       },
       0,
     );
 
-    /* ═══════════════════════════════════════
-       INTERNAL VISUAL MOTION
-       
-       The visual is now a system of layers
-       instead of one flat SVG.
-    ═══════════════════════════════════════ */
-
-    // Outer instrument rotates slowly clockwise.
-    scrollTimeline.fromTo(
-      visualOuter,
-      {
-        rotation: 0,
-      },
-      {
-        rotation: 72,
-        duration: 1,
-        ease: "none",
-      },
-      0,
-    );
-
-    // Measurement ticks move slightly faster,
-    // creating a calibration effect.
-    scrollTimeline.fromTo(
-      visualTicks,
-      {
-        rotation: 0,
-      },
-      {
-        rotation: -110,
-        duration: 1,
-        ease: "none",
-      },
-      0,
-    );
-
-    // Orbital system moves opposite to the main
-    // instrument, making the visual feel layered.
-    scrollTimeline.fromTo(
-      orbitSystem,
-      {
-        rotation: 0,
-      },
-      {
-        rotation: -95,
-        duration: 1,
-        ease: "none",
-      },
-      0,
-    );
-
-    // Core barely rotates, preserving stability
-    // while everything around it moves.
-    scrollTimeline.fromTo(
-      coreGroup,
-      {
-        rotation: 0,
-      },
-      {
-        rotation: 24,
-        duration: 1,
-        ease: "none",
-      },
-      0.05,
-    );
-
-    /* ═══════════════════════════════════════
-       METRICS
-    ═══════════════════════════════════════ */
-
-    scrollTimeline.fromTo(
-      metric,
-      {
-        y: 30,
-        opacity: 0,
-      },
-      {
-        y: 0,
-        opacity: 1,
-        duration: 0.35,
-        ease: "none",
-      },
-      0.28,
-    );
-
-    scrollTimeline.fromTo(
-      metricLine,
-      {
-        scaleX: 0,
-      },
-      {
-        scaleX: 1,
-        duration: 0.3,
-        ease: "none",
-      },
-      0.3,
-    );
-
-    scrollTimeline.to(
-      title,
-      {
-        y: -135,
-        scale: 0.55,
-        opacity: 0.42,
-        duration: 0.25,
-        ease: "none",
-      },
-      0.75,
-    );
-
-    /* ═══════════════════════════════════════
-       PROGRESS
-    ═══════════════════════════════════════ */
-
-    scrollTimeline.fromTo(
-      progress,
-      {
-        width: "25%",
-      },
-      {
-        width: "100%",
-        duration: 1,
-        ease: "none",
-      },
-      0,
-    );
-
-    /* ═══════════════════════════════════════
-       METRIC CROSSFADE
-    ═══════════════════════════════════════ */
-
-    if (items.length > 1) {
-      ScrollTrigger.create({
-        trigger: root,
-        start: "top top",
-        end: "bottom bottom",
-        onUpdate: (self) => {
-          const scrollProgress = self.progress;
-
-          // Metrics become the main story after the
-          // initial headline transition.
-          const metricStart = 0.28;
-          const metricEnd = 0.92;
-
-          const normalizedProgress = gsap.utils.clamp(
-            0,
-            1,
-            (scrollProgress - metricStart) / (metricEnd - metricStart),
-          );
-
-          const scaledProgress = normalizedProgress * (metrics.length - 1);
-
-          const lowerIndex = Math.floor(scaledProgress);
-
-          const upperIndex = Math.min(lowerIndex + 1, metrics.length - 1);
-
-          const localProgress = scaledProgress - lowerIndex;
-
-          items.forEach((item, index) => {
-            let opacity = 0;
-            let y = 12;
-            let scale = 0.97;
-
-            // Current metric exits.
-            if (index === lowerIndex) {
-              const fadeOut = gsap.utils.clamp(0, 1, localProgress / 0.65);
-
-              opacity = 1 - fadeOut;
-              y = -8 * fadeOut;
-              scale = 1 - 0.025 * fadeOut;
-            }
-
-            // Next metric enters.
-            if (index === upperIndex) {
-              const fadeIn = gsap.utils.clamp(
-                0,
-                1,
-                (localProgress - 0.35) / 0.65,
-              );
-
-              opacity = Math.max(opacity, fadeIn);
-
-              y = 12 - 12 * fadeIn;
-              scale = 0.97 + 0.03 * fadeIn;
-            }
-
-            // Prevent the final metric from disappearing.
-            if (index === lowerIndex && lowerIndex === upperIndex) {
-              opacity = 1;
-              y = 0;
-              scale = 1;
-            }
-
-            gsap.set(item, {
-              opacity,
-              y,
-              scale,
-              transformOrigin: "left center",
-            });
-          });
-
-          const activeIndex = localProgress >= 0.5 ? upperIndex : lowerIndex;
-
-          indexElement.textContent = `${String(activeIndex + 1).padStart(
-            2,
-            "0",
-          )} / ${String(metrics.length).padStart(2, "0")}`;
+    // Phase 2: separate the artwork into layers.
+    if (backPanel) {
+      scroll.to(
+        backPanel,
+        {
+          x: distance(-26, -8),
+          y: distance(-90, -30),
+          rotation: distance(-5, -2),
+          duration: 1.2,
         },
-      });
+        1,
+      );
     }
+
+    if (frontPanel) {
+      scroll.to(
+        frontPanel,
+        {
+          x: distance(24, 8),
+          y: distance(66, 24),
+          rotation: distance(3, 1.5),
+          duration: 1.2,
+        },
+        1,
+      );
+    }
+
+    if (orangeForm) {
+      scroll.to(
+        orangeForm,
+        {
+          x: distance(26, 6),
+          y: distance(-24, -8),
+          rotation: distance(16, 7),
+          scale: distance(1.18, 1.06),
+          duration: 1.2,
+        },
+        1.1,
+      );
+    }
+
+    if (details) {
+      scroll.to(
+        details,
+        {
+          y: distance(-14, -5),
+          autoAlpha: 0.65,
+          duration: 1,
+        },
+        1.15,
+      );
+    }
+
+    // Phase 3: shift attention to the artwork.
+    if (title) {
+      scroll.to(
+        title,
+        {
+          scale: distance(0.82, 0.94),
+          x: distance(-18, 0),
+          transformOrigin: "left center",
+          duration: 1.15,
+        },
+        2.2,
+      );
+    }
+
+    if (eyebrow) {
+      scroll.to(
+        eyebrow,
+        {
+          autoAlpha: 0.55,
+          duration: 0.7,
+        },
+        2.2,
+      );
+    }
+
+    if (statement) {
+      scroll.to(
+        statement,
+        {
+          autoAlpha: distance(0.5, 0.35),
+          y: -10,
+          duration: 0.8,
+        },
+        2.2,
+      );
+    }
+
+    // Phase 4: settle the separated artwork.
+    if (backPanel) {
+      scroll.to(
+        backPanel,
+        {
+          x: distance(-18, -5),
+          y: distance(-72, -24),
+          rotation: distance(-3, -1),
+          duration: 0.9,
+          ease: "power2.out",
+        },
+        3.4,
+      );
+    }
+
+    if (frontPanel) {
+      scroll.to(
+        frontPanel,
+        {
+          x: distance(17, 5),
+          y: distance(52, 18),
+          rotation: distance(1.5, 0.5),
+          duration: 0.9,
+          ease: "power2.out",
+        },
+        3.4,
+      );
+    }
+
+    if (orangeForm) {
+      scroll.to(
+        orangeForm,
+        {
+          x: distance(16, 4),
+          y: distance(-14, -5),
+          rotation: distance(8, 4),
+          scale: distance(1.08, 1.035),
+          duration: 0.9,
+          ease: "power2.out",
+        },
+        3.4,
+      );
+    }
+
+    scroll.to(
+      visual,
+      {
+        scale: distance(1.045, 1.015),
+        y: distance(-8, -3),
+        duration: 0.9,
+        ease: "power2.out",
+      },
+      3.4,
+    );
+
+    // Metric transitions.
+    const metricStart = isMobile ? 2.35 : 2.15;
+    const metricSpan = 1.65;
+    const interval =
+      metricItems.length > 1 ? metricSpan / (metricItems.length - 1) : 0;
+
+    metricItems.forEach((item, index) => {
+      if (index === 0) return;
+
+      const position = metricStart + (index - 1) * interval;
+      const previous = metricItems[index - 1];
+
+      scroll.to(
+        previous,
+        {
+          autoAlpha: 0,
+          y: -16,
+          scale: 0.985,
+          duration: 0.24,
+          ease: "power2.inOut",
+        },
+        position,
+      );
+
+      scroll.fromTo(
+        item,
+        {
+          autoAlpha: 0,
+          y: 24,
+          scale: 0.98,
+        },
+        {
+          autoAlpha: 1,
+          y: 0,
+          scale: 1,
+          duration: 0.38,
+          ease: "power3.out",
+        },
+        position + 0.08,
+      );
+    });
+
+    if (metricLine) {
+      scroll.to(
+        metricLine,
+        {
+          scaleX: 1,
+          duration: 1.1,
+          ease: "power2.out",
+        },
+        2.2,
+      );
+    }
+
+    if (progress) {
+      scroll.to(
+        progress,
+        {
+          scaleX: 1,
+          duration: 4.3,
+        },
+        0,
+      );
+    }
+
+    // Recalculate positions after the initial layout.
+    const refreshFrame = requestAnimationFrame(() => {
+      ScrollTrigger.refresh();
+
+      console.info("[Hero] Scroll animation ready.", {
+        triggerCount: ScrollTrigger.getAll().length,
+        mobile: isMobile,
+      });
+    });
+
+    // Cancel pending refresh if this context is reverted.
+    return () => cancelAnimationFrame(refreshFrame);
   }, root);
 
-  return () => {
-    context.revert();
-  };
+  return () => context.revert();
 }
